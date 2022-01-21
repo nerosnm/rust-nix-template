@@ -1,0 +1,67 @@
+[template]
+ignore = [
+    ".git",
+]
+
+[placeholders.toolchain]
+type = "string"
+prompt = "Which toolchain version do you want?"
+choices = ["stable", "beta", "nightly"]
+default = "stable"
+
+[placeholders.nix]
+type = "bool"
+prompt = "Set up a Nix flake?"
+default = true
+
+[placeholders.github_actions]
+type = "bool"
+prompt = "Set up GitHub Actions CI?"
+default = true
+
+[placeholders.dependabot]
+type = "bool"
+prompt = "Enable Dependabot version checks?"
+default = true
+
+[conditional.'github_actions == true || dependabot == true'.placeholders.github_username]
+type = "string"
+prompt = "Enter your GitHub username"
+
+[placeholders.dual_license]
+type = "bool"
+prompt = "Add a dual MIT/Apache-2.0 license?"
+default = true
+
+[conditional.'crate_type == "lib"']
+ignore = [
+    "src/main.rs"
+]
+
+[conditional.'nix == false']
+ignore = [
+    ".envrc",
+    "flake.nix",
+]
+
+[conditional.'github_actions == false']
+ignore = [
+   ".github/workflows",
+]
+
+[conditional.'dependabot == false']
+ignore = [
+   ".github/dependabot.yml",
+]
+
+[conditional.'github_actions == false && dependabot == false']
+# Ignore the whole directory, because even if it's empty, cargo-generate will still create it
+ignore = [
+   ".github",
+]
+
+[conditional.'dual_license == false']
+ignore = [
+    "LICENSE-APACHE",
+    "LICENSE-MIT",
+]
