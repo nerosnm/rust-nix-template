@@ -33,6 +33,12 @@ jobs:
         toolchain: nightly
         profile: minimal
         components: rustfmt
+    - name: Rustfmt
+      uses: actions-rs/cargo@v1
+      with:
+        command: fmt
+        toolchain: nightly
+        args: -- --check
 
   lint:
     runs-on: ubuntu-latest
@@ -59,11 +65,6 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         args: --all-features
-    - name: Rustfmt
-      uses: actions-rs/cargo@v1
-      with:
-        command: fmt
-        args: -- --check
 
   test:
     runs-on: ubuntu-latest
