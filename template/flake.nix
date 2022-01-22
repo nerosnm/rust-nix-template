@@ -25,6 +25,8 @@
           extensions = [ "rust-src" ];
         };
 
+      nightly-rustfmt = pkgs.rust-bin.nightly.latest.rustfmt;
+
       naersk-lib = naersk.lib."${system}".override {
         rustc = rust-toolchain;
       };
@@ -49,6 +51,10 @@
 
       devShell = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [
+          # The ordering of these two items is important. For nightly rustfmt to be used instead of 
+          # the rustfmt provided by `rust-toolchain`, it must appear first in the list. This is 
+          # because native build inputs are added to $PATH in the order they're listed here.
+          nightly-rustfmt
           rust-toolchain
         ] ++ format-pkgs;
       };
