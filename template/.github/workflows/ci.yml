@@ -47,6 +47,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: cancel-previous
 
+    permissions:
+      contents: read
+      checks: write
+
     steps:
     - name: Clone
       uses: actions/checkout@v2
