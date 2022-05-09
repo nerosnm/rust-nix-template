@@ -28,6 +28,7 @@
       nightly-rustfmt = pkgs.rust-bin.nightly.latest.rustfmt;
 
       naersk-lib = naersk.lib."${system}".override {
+        cargo = rust-toolchain;
         rustc = rust-toolchain;
       };
 
@@ -37,19 +38,23 @@
     in
     rec
     {
-      packages.{{project-name}} = naersk-lib.buildPackage {
-        pname = "{{project-name}}";
-        root = ./.;
-        nativeBuildInputs = with pkgs; [ ];
+      packages = rec {
+        {{project-name}} = naersk-lib.buildPackage {
+          pname = "{{project-name}}";
+          root = ./.;
+          nativeBuildInputs = with pkgs; [ ];
+        };
+        default = {{project-name}};
       };
-      defaultPackage = packages.{{project-name}};
 
-      apps.{{project-name}} = flake-utils.lib.mkApp {
-        drv = packages.{{project-name}};
+      apps = rec {
+        {{project-name}} = flake-utils.lib.mkApp {
+          drv = packages.{{project-name}};
+        };
+        default = {{project-name}};
       };
-      defaultApp = apps.{{project-name}};
 
-      devShell = pkgs.mkShell {
+      devShells.default = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [
           # The ordering of these two items is important. For nightly rustfmt to be used instead of 
           # the rustfmt provided by `rust-toolchain`, it must appear first in the list. This is 
